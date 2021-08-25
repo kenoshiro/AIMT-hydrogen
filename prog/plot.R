@@ -247,14 +247,15 @@ p$prc_sec2 <- filter(df$all,Variable%in%df$var$Variable,Year%in%seq(2005,2050,by
     mutate(scen_cpol=factor(scen_cpol,levels=lst$cpol),scen_tech=factor(scen_tech,levels=lst$scen_tech)) %>% 
     ggplot()+
     geom_abline(slope=c(1,2,3),linetype='dashed',color='grey50')+
-    geom_text(x=28,y=32,label='s=1',size=3.5,color='grey50')+geom_text(x=28,y=63,label='s=2',size=3.5,color='grey50')+geom_text(x=28,y=90,label='s=3',size=3.5,color='grey50')+
+    geom_text(x=32,y=30,label='s=1',size=3.5,color='grey50')+geom_text(x=32,y=60,label='s=2',size=3.5,color='grey50')+geom_text(x=32,y=90,label='s=3',size=3.5,color='grey50')+
     geom_point(aes(x=Electricity,y=Hydrogen,color=scen_cpol,shape=scen_tech))+
     labs(x='Electricity production cost (US$/GJ)',y='Hydrogen production cost (US$/GJ)')+
-    ylim(0,NA)+xlim(0,NA)+
+    ylim(0,NA)+xlim(0,33)+
     guides(color=guide_legend(title=NULL),shape=guide_legend(title=NULL))+
     mytheme$set1+theme(legend.position='none',strip.background=element_blank())+
     scale_shape_manual(values=lst$scen_tech_shape)+
     scale_color_viridis_d(option='plasma',end=.9)
+print(p$prc_sec2)
 
 p$prc_car <- filter(df$all,Variable=='Prc_Car',Year==2050,Region=='World',Scenario%in%lst$scen_pol) %>% 
     inner_join(df$scen_mat,by='Scenario') %>% 
@@ -289,7 +290,7 @@ p$cuminv <- filter(df$all,Variable=='Pol_Cos_Cum_Dis',Year==2050,Region=='World'
     scale_color_viridis_d(option='plasma',end=.9)
 
 p$l_prc_sec <- get_legend(p$prc_sec1)
-p$prc_sec <- plot_grid(p$prc_sec2,p$prc_sec1+theme(legend.position='none'),align='h',axis='tb',nrow=1,labels=c('a','b'),rel_widths=c(1,1.4))
+p$prc_sec <- plot_grid(p$prc_sec2,p$prc_sec1+theme(legend.position='none'),align='h',axis='tb',nrow=1,labels=c('a','b'),rel_widths=c(1,1.3))
 p$pol_cos <- plot_grid(p$prc_car+theme(legend.position='none'),p$cuminv+theme(legend.position='none'),align='h',axis='tb',nrow=1,labels=c('c','d'),rel_widths=c(1,1.1))
 p$tmp <- plot_grid(p$prc_sec,p$pol_cos,p$l_prc_sec,ncol=1,rel_heights=c(1,1,.15))
 print(p$tmp)

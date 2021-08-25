@@ -6,6 +6,9 @@ library(magrittr)
 library(ggplot2)
 library(cowplot)
 
+dir.create(path='data',showWarnings=F)
+dir.create(path='output',showWarnings=F)
+
 df <- list()
 lst <- list()
 obj <- list()
