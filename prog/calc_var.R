@@ -64,7 +64,7 @@ df$all %<>%
     bind_rows(fcalc_share(vars=c('Trd_Imp_Vol','Trd_Sec_Ene_Imp_Amm_and_Syn_Vol'),name_new='Trd_Imp_Share_Sec_Ene_Amm_and_Syn_Vol'))
 
 df$all %<>% 
-    bind_rows(fcalc_relBaselinereductionrate(var='Emi_CO2_Ene_and_Ind_Pro',name_new='Emi_CO2_Ene_and_Ind_Pro_Red_base')) %>% 
+    bind_rows(fcalc_relBaselinereductionrate(var='Emi_CO2',name_new='Emi_CO2_Red_base')) %>% 
     bind_rows(fcalc_relBaselinereductionrate(var='Emi_CO2_Ene_Dem',name_new='Emi_CO2_Ene_Dem_Red_base')) %>% 
     bind_rows(fcalc_relBaselinereductionrate(var='Emi_CO2_Ene_Dem_Ind',name_new='Emi_CO2_Ene_Dem_Ind_Red_base')) %>% 
     bind_rows(fcalc_relBaselinereductionrate(var='Emi_CO2_Ene_Dem_Res_and_Com',name_new='Emi_CO2_Ene_Dem_Res_and_Com_Red_base')) %>% 

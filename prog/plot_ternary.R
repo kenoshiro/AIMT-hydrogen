@@ -31,3 +31,4 @@ print(p$fec_tern)
 
 p$tmp <- grid.arrange(p$fec_point+theme(legend.position='none'),p$fec_tern,heights=c(1,.6))
 ggsave(filename='output/fig2.png',plot=p$tmp,width=190,height=200,units='mm',dpi=300)
+ggsave(filename='output/fig2.eps',plot=p$tmp,width=190,height=200,units='mm')

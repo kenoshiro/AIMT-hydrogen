@@ -3,7 +3,8 @@ mytheme$set1 <- theme_bw()+theme(plot.title=element_text(size=11),
                                  axis.title=element_text(size=10),
                                  panel.grid=element_blank(),
                                  panel.border=element_blank(),
-                                 axis.line.x=element_line(color='black'),axis.line.y=element_line(color='black')
+                                 axis.line.x=element_line(color='black',size=.3),axis.line.y=element_line(color='black',size=.3),
+                                 axis.ticks=element_line(color='black',size=.3)
                                  )
 lst$scen_tech <- c('Default','CCSoff','LimBio','H2off','H2lowcost','VRElowcost')
 lst$scen_tech_shape <- c('Default'=1,
@@ -22,7 +23,9 @@ df$var <- tribble(~Variable,~Legend,~Color,
                   'Emi_CO2_Ene_Dem_Ind_and_AFO','Industry','salmon',
                   'Emi_CO2_Ene_Dem_Res_and_Com','Buildings','lightsteelblue',
                   'Emi_CO2_Ene_Dem_Tra','Transportation','darkolivegreen2',
-                  'Emi_CO2_Ind_Pro','Industrial processes','grey')
+                  'Emi_CO2_Ind_Pro','Industrial processes','grey',
+                  'Emi_CO2_Oth','DACCS','thistle2'
+                  )
 leg <- as.character(df$var$Legend); names(leg) <- as.character(df$var$Variable)
 col <- as.character(df$var$Color); names(col) <- as.character(df$var$Variable)
 p$emi2 <- filter(df$all,Variable%in%df$var$Variable,Year==2050,Region=='World',Scenario%in%lst$scen_pol) %>% 
@@ -39,7 +42,7 @@ p$emi2 <- filter(df$all,Variable%in%df$var$Variable,Year==2050,Region=='World',S
     mytheme$set1+theme(legend.position=c(.7,.75),strip.background=element_blank(),axis.text.x=element_text(angle=45,hjust=1))+
     theme(axis.line.y=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),plot.background=element_rect(fill='transparent',color='transparent'),legend.key.size=unit(.75,'lines'))+
     scale_fill_manual(values=rev(col),labels=leg,name=NULL)
-p$emi1 <- filter(df$all,Variable=='Emi_CO2_Ene_and_Ind_Pro',Year%in%seq(2005,2050,by=5),Region=='World') %>% 
+p$emi1 <- filter(df$all,Variable=='Emi_CO2',Year%in%seq(2005,2050,by=5),Region=='World') %>% 
     inner_join(df$scen_mat,by='Scenario') %>% 
     filter(scen_tech=='Default') %>% 
     mutate(scen_tech=factor(scen_tech,levels=lst$scen_tech),scen_cpol=factor(scen_cpol,levels=lst$cpol)) %>% 
@@ -116,7 +119,7 @@ p$tmp <- plot_grid(p$emi,p$co2fin,labels=c('b','c'),nrow=1,rel_widths=c(1,.8))
 p$tmp <- plot_grid(p$fec,p$tmp,labels=c('a',''),ncol=1,rel_heights=c(1,1.1))
 print(p$tmp)
 ggsave(filename='output/fig1.png',plot=p$tmp,width=190,height=175,units='mm',dpi=300)
-
+ggsave(filename='output/fig1.eps',plot=p$tmp,width=190,height=175,units='mm')
 
 
 # Fig.2 -------------------------------------------------------------------
@@ -174,7 +177,6 @@ p$hyd_2 <- filter(df$all,Variable%in%df$var$Variable,Year%in%2050,Region=='World
     geom_hline(yintercept=0,color='grey20',size=.2)+
     geom_bar(aes(x=scen_tech,y=Value,fill=Variable),position='stack',stat='identity')+
     labs(x=NULL,y='Hydrogen supply and consumption (EJ/yr)')+
-    ylim(-100,100)+
     facet_grid(.~scen_cpol)+
     mytheme$set1+theme(legend.position='right',strip.background=element_blank(),axis.text.x=element_text(angle=90,hjust=1,vjust=.25),legend.key.height=unit(1.5,'lines'),legend.key.width=unit(.5,'lines'))+
     scale_fill_manual(values=col,labels=leg,name=NULL)
@@ -221,6 +223,7 @@ p$tmp <- plot_grid(p$hyd_2,p$sto,labels=c('a','b'),nrow=1,rel_widths=c(1,.7)) %>
     plot_grid(p$trd,labels=c('','c'),ncol=1,rel_heights=c(1,.8))
 print(p$tmp)
 ggsave(filename='output/fig3.png',plot=p$tmp,width=190,height=180,units='mm',dpi=300)
+ggsave(filename='output/fig3.eps',plot=p$tmp,width=190,height=180,units='mm')
 
 
 # Fig.4 -------------------------------------------------------------------
@@ -246,8 +249,8 @@ p$prc_sec2 <- filter(df$all,Variable%in%df$var$Variable,Year%in%seq(2005,2050,by
     filter(Hydrogen>0 & Hydrogen>0) %>% 
     mutate(scen_cpol=factor(scen_cpol,levels=lst$cpol),scen_tech=factor(scen_tech,levels=lst$scen_tech)) %>% 
     ggplot()+
-    geom_abline(slope=c(1,2,3),linetype='dashed',color='grey50')+
-    geom_text(x=32,y=30,label='s=1',size=3.5,color='grey50')+geom_text(x=32,y=60,label='s=2',size=3.5,color='grey50')+geom_text(x=32,y=90,label='s=3',size=3.5,color='grey50')+
+    geom_abline(slope=c(1,2),linetype='dashed',color='grey50')+
+    geom_text(x=32,y=30,label='s=1',size=3.5,color='grey50')+geom_text(x=28,y=48,label='s=2',size=3.5,color='grey50')+
     geom_point(aes(x=Electricity,y=Hydrogen,color=scen_cpol,shape=scen_tech))+
     labs(x='Electricity production cost (US$/GJ)',y='Hydrogen production cost (US$/GJ)')+
     ylim(0,NA)+xlim(0,33)+
@@ -295,3 +298,4 @@ p$pol_cos <- plot_grid(p$prc_car+theme(legend.position='none'),p$cuminv+theme(le
 p$tmp <- plot_grid(p$prc_sec,p$pol_cos,p$l_prc_sec,ncol=1,rel_heights=c(1,1,.15))
 print(p$tmp)
 ggsave(filename='output/fig4.png',plot=p$tmp,width=190,height=180,units='mm',dpi=300)
+ggsave(filename='output/fig4.eps',plot=p$tmp,width=190,height=180,units='mm')

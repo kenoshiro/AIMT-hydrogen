@@ -37,6 +37,7 @@ NoPol,Default,NoPol-Default,NoPol-Default
 500,VRElowcost,NoPol-Default,500-VRElowcost
 600,Default,NoPol-Default,600-Default
 600,LimBio,NoPol-Default,600-LimBio
+600,CCSoff,NoPol-Default,600-CCSoff
 600,H2lowcost,NoPol-Default,600-H2lowcost
 600,H2off,NoPol-Default,600-H2off
 600,VRElowcost,NoPol-Default,600-VRElowcost
